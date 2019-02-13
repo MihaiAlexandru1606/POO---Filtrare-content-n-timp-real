@@ -1,0 +1,79 @@
+---------------------------           POO          ----------------------------
+
+Tema 2: Filtrare​ ​ content​ ​ în​ ​ timp​ ​ real
+Nume : Niculescu
+Prenume : Mihai Alexandru
+Grupa : 325CB
+Sistem de operare : Ubuntu 16.04 LTS 64bit & Windows 10 64bit
+Editor : Eclipse Oxygen Java 
+
+
+-------------------------------------------------------------------------------
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    Tema realizeaza o implementare pentru filtrarea informatiilor in timp real.
+    Pentru realizeaza temei s-au folosit design pattern-urile: Observer, 
+Singleton, Factory​ ​, ​ Visitor.
+
+    Clasa Main are metoda main care citeste comenzile de la System.in, le 
+paseaza( cu ajutorul metodei parser din  clasa Input), si ruleza comnezile.
+
+    In directorul exception se gasesc exceptii pe care le-am folosit daca 
+tokenizarea este incorecta sau daca s-a primit un input incorect , exemplu pt 
+input incorect creat 10 nil ( nu exista comanda creat ) sau 
+create_obs 12 ( eq name ) , nu am valuare de compareare.
+
+    In directorul io: se gasescte clasa Input care realizeaza pasarea line cu 
+ajutorul expresiolor regulate,( se cauata primul "grup" care respecta 
+pattern-ul, este "copiat", apoi este inlocuit in stringul original cu "" etc.) 
+Am ales sa folosesc astfel pasarea inputului,(si a nu folosi string.split() sau 
+StringTokenizer ) pentru a simplifica constructia arborelui( am considerat ca
+"eq name QQQ" este un operand , cum era 3 si 4 in exemplu dat).
+
+    In directorul : operators se gasesc operatori pentru compararea a doua 
+valori ("Op" : ne, eq, lt, le, gt, ge). Fiecare dintre ei implementeza interfata 
+Operators si metoda compare. Pentru acestia s-a folosit Factory si Singleton 
+pentru clasa OperatorsFactory( nu avem nevoie de mai mult de o instanta a 
+acestei clase in program). Am folosit Singleton pentru a avea decat o instanata si
+a accesa metoda getOperators :
+https://softwareengineering.stackexchange.com/questions/219043
+/static-factory-vs-factory-as-a-singleton si https://stackoverflow.com/questions
+/21033112/how-to-correctly-make-a-thread-safe-singleton-factory-in-java .
+
+    In direactorul: expession este implementarea arborelui si a evaluatorului. 
+Pentru parcurgerea si evaluarea arborelui s-a folosit design pattern Visitor. 
+Fiecare nod al arborelui (AndNode OrNode OperandNode) implementeza interfata 
+Node care extinde interfata Visistable. Pentru construirea arborelui s-a folosit o expresie 
+postfix.Prentru transformarea expresiei infix in postfix se utilizeza agoritmul shunting 
+yard. Cu ajutorul formei postfix se construieste arborele. Pentru variabile name
+si value am folosit StringBuilder, pentru a putea modifica, si a nu 
+trebui sa parcurg arborele pentru a seta variabilele. "Calcularea"/verificarea,
+daca un feed respecata filtrul, este realizata cu ajutorul ExpressionEvaluators 
+care implementeza interfata Visitor. Pentru ca nu avem nevoie decat de o instanta a
+acestei clase s-a folosit Singleton.
+
+    In directorul: observer se gaseste implementarea pentru observatori si feed.
+Pentru acesta s-a folosit design pattern Observer, considerand ca Subject este 
+feed, iar observatori sunt ObserverExpression si ObserverNil. Feed implementeza
+interfata Subject si metodele addObserver, notifyAllObservers, deleteObserver .
+Metode notifyAllObservers , modifica toti observatorii cand isi modifica starea , 
+notificarea realizandu-se prin metoda update al observatorului. Observatorii si 
+feed-urile sunt stocate in HashMap-uri, iar cand un obsevator este creat este 
+notificat despre valorile stock-urilor anterioare. Stocarea informatiilor de catre
+observatori depre stock-uri este realizata printr-un TreeMap, si cu ajutorul 
+clasei InfoStock-uri ,in care sunt stocate informatii ca si numarul de schimbari, 
+ultima valuarea pentru un stock, daca a trecut de filtru, fluctuati etc.
+Cum design pattern Observer descrie o relatie "one-to-many", astfel cand 
+subiectul( in cazul acesta am considerat ca fiind Feed), cand isi modifica starea
+(primeste un feed nou), acesta trebuie sa instiinteze pe toti cei care il "observa"
+ca el si-a modificat starea.
+Observatorii se ataseaza "subiectului" cand sunt creati cu ajutorul atributului 
+subject. Creare de observatori se face folosind getObserver din clasa 
+ObserverFactory. Cum nu avem nevoie  decat de un subiect si o instanata a 
+clasei ObserverFactory s-a folosit Singleton.
+
+
+PS : Sarbatori fericite si un an nou fericit ! :)
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
